@@ -26,6 +26,8 @@ STATE_WARNING = 1
 STATE_CRITICAL = 2
 STATE_UNKNOWN = 3
 
+STATE_NAMES = ('OK', 'WARNING', 'CRITICAL', 'UNKNOWN')
+
 
 def get_args():
     parser = argparse.ArgumentParser("Check BTRFS filesystem usage")
@@ -162,11 +164,12 @@ def main():
     msg.extend(dev_stats_msg)
     summary.extend(dev_stats_summary)
 
-    if len(msg) > 0:
-        print(", ".join(msg))
-    else:
-        print("BTRFS OK")
-    print(", ".join(summary))
+    stdout_msg = STATE_NAMES[state]
+    if msg:
+        stdout_msg += ", " + ", ".join(msg)
+    stdout_msg += ", " + ", ".join(summary)
+    print(stdout_msg)
+
     return state
 
 
